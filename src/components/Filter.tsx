@@ -7,12 +7,6 @@ type Props = {
   setFilterStatus: (filterStatus: Status) => void;
 };
 
-const filterTitles = {
-  [Status.All]: 'All',
-  [Status.Active]: 'Active',
-  [Status.Completed]: 'Completed',
-};
-
 export const Filter: React.FC<Props> = ({ filterStatus, setFilterStatus }) => (
   <nav className="filter" data-cy="Filter">
     {Object.values(Status).map(status => (
@@ -20,7 +14,7 @@ export const Filter: React.FC<Props> = ({ filterStatus, setFilterStatus }) => (
         key={status}
         href="#/"
         className={cn('filter__link', { selected: filterStatus === status })}
-        data-cy={`FilterLink${filterTitles[status]}`}
+        data-cy={`FilterLink${status}`}
         onClick={() => setFilterStatus(status)}
       >
         {status[0].toUpperCase() + status.slice(1)}

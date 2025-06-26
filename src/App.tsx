@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UserWarning } from './UserWarning';
-// import { getTodos, USER_ID } from './api/todos';
 import { Todo } from './types/Todo';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -57,7 +56,7 @@ export const App: React.FC = () => {
     }, 3000);
   };
 
-  function loadTodos() {
+  useEffect(() => {
     setLoading(true);
 
     todoService
@@ -67,11 +66,7 @@ export const App: React.FC = () => {
         showError('Unable to load todos');
       })
       .finally(() => setLoading(false));
-  }
-
-  useEffect(() => {
-    loadTodos();
-  }, [todoService.USER_ID]);
+  }, []);
 
   if (!todoService.USER_ID) {
     return <UserWarning />;
@@ -82,15 +77,15 @@ export const App: React.FC = () => {
   const allTodosAreActive =
     todos.length > 0 && todos.every(todo => todo.completed);
 
-  function addTodo(newTodo: Omit<Todo, 'id'>) {
+  const addTodo = (newTodo: Omit<Todo, 'id'>) => {
     setLoading(true);
 
-    const optimicTodo: Todo = {
+    const optimisticTodo: Todo = {
       ...newTodo,
       id: 0,
     };
 
-    setTempTodo(optimicTodo);
+    setTempTodo(optimisticTodo);
 
     todoService
       .createTodo(newTodo)
@@ -106,9 +101,9 @@ export const App: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
-  }
+  };
 
-  function handleAddTodo() {
+  const handleAddTodo = () => {
     const trimmedTitle = newTitle.trim();
 
     if (!trimmedTitle) {
@@ -124,9 +119,9 @@ export const App: React.FC = () => {
     };
 
     addTodo(newTodo);
-  }
+  };
 
-  function deleteTodo(todoId: number) {
+  const deleteTodo = (todoId: number) => {
     const todoToDelete = todos.find(todo => todo.id === todoId);
 
     setSelectedTodo(todoToDelete || null);
@@ -143,9 +138,9 @@ export const App: React.FC = () => {
         }
       })
       .catch(() => showError('Unable to delete a todo'));
-  }
+  };
 
-  async function deleteCompleted() {
+  const deleteCompleted = async () => {
     const completed = todos.filter(todo => todo.completed);
 
     if (completed.length === 0) {
@@ -178,7 +173,7 @@ export const App: React.FC = () => {
     if (hasErrors) {
       showError('Unable to delete a todo');
     }
-  }
+  };
 
   return (
     <div className="todoapp">
