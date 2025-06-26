@@ -9,16 +9,20 @@ type Props = {
 
 export const Filter: React.FC<Props> = ({ filterStatus, setFilterStatus }) => (
   <nav className="filter" data-cy="Filter">
-    {Object.values(Status).map(status => (
-      <a
-        key={status}
-        href="#/"
-        className={cn('filter__link', { selected: filterStatus === status })}
-        data-cy={`FilterLink${status}`}
-        onClick={() => setFilterStatus(status)}
-      >
-        {status[0].toUpperCase() + status.slice(1)}
-      </a>
-    ))}
+    {Object.values(Status).map(status => {
+      const title = status.charAt(0).toUpperCase() + status.slice(1);
+
+      return (
+        <a
+          key={status}
+          href="#/"
+          className={cn('filter__link', { selected: filterStatus === status })}
+          data-cy={`FilterLink${title}`}
+          onClick={() => setFilterStatus(status)}
+        >
+          {title}
+        </a>
+      );
+    })}
   </nav>
 );
